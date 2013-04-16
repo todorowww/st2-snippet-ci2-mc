@@ -1,0 +1,82 @@
+<snippet>
+    <content><![CDATA[
+if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+
+class ${1:name} extends CI_Model {
+    
+    /**
+     * @name string TABLE_NAME Holds the name of the table in use by this model
+     */
+    const TABLE_NAME = '${2}';
+
+    /**
+     * @name string PRI_INDEX Holds the name of the tables' primary index used in this model
+     */
+    const PRI_INDEX = '${3}';
+
+    /**
+     * Retrieves record(s) from the database
+     * @param string $id Optional. Retrieves only the record matching given ID
+     * @return mixed Single record if ID is given, or array of results
+     */
+    public function get($id = NULL) {
+        $this->db->select('*');
+        $this->db->from(self::TABLE_NAME);
+        if ($id !== NULL) {
+            $this->db->where(self::PRI_INDEX, $id);
+        }
+        $result = $this->db->get()->result();
+        if ($result) {
+            if ($id !== NULL) {
+                return array_shift($result);
+            } else {
+                return $result;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Inserts new data into database
+     * @param Array $data Associative array with field_name=>value pattern to be inserted into database
+     * @return mixed Inserted row ID, or false if error occured
+     */
+    public function insert(Array $data) {
+        if ($this->db->insert(self::TABLE_NAME, $data)) {
+            return $this->db->insert_id();
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Updates selected record in the database
+     * @param string $id  ID of the record to update. If $where is ommited, $id is used
+     * @param Array $data Associative array field_name=>value to be updated
+     * @param Array $where Optional. Associative array field_name=>value, for where condition. If specified, $id is not used
+     * @return int Number of affected rows by the update query
+     */
+    public function update($id, Array $data, Array $where = array()) {
+        if (empty($where)) {
+            $where = array(self::PRI_INDEX => $id);
+        }
+        $this->db->update(self::TABLE_NAME, $data, $where);
+        return $this->db->affected_rows();
+    }
+
+    /**
+     * Deletes specified record from the database
+     * @param string $id  ID of the record to delete. If $where is ommited, $id is used
+     * @param Array $where Optional. Associative array field_name=>value, for where condition. If specified, $id is not used
+     * @return int Number of rows affected by the delete query
+     */
+    public function delete($id, Array $where = array()) {
+        $this->db->dekete(self::TABLE_NAME, $where);
+        return $this->db->affected_rows();
+    }
+}
+        ]]></content>
+        <tabTrigger>ci2me</tabTrigger>
+        <scope>source.php</scope>
+    </snippet>
