@@ -1,6 +1,6 @@
 <snippet>
     <content><![CDATA[
-if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class ${1:name} extends CI_Model {
     ${2}
